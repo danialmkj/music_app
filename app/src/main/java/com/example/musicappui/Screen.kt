@@ -20,3 +20,10 @@ sealed class Screen(
             DrawerScreen("Add Account", "add_account", R.drawable.baseline_person_add_alt_1_24)
     }
 }
+
+
+val screensInDrawer = listOf(
+    Screen.DrawerScreen.Account,
+    Screen.DrawerScreen.Subscription,
+    Screen.DrawerScreen.AddAccount
+)

@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
@@ -14,15 +16,21 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
+import androidx.compose.material.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -36,6 +44,19 @@ fun MainView(
     val scope: CoroutineScope =
         rememberCoroutineScope()  //use the scope here to open/close drawer because It needs async method
 
+    //allow us to find out on which "View" we current are
+    val controller: NavController = rememberNavController()
+    val navBackStackEntry by controller.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+
+
+    val title = remember {
+        //change that to currentScreen.title
+        mutableStateOf("")
+    }
+
+
     Scaffold(topBar = {
         TopAppBar(title = { Text("Home") },
             navigationIcon = {
@@ -44,10 +65,27 @@ fun MainView(
                     scope.launch {
                         scaffoldState.drawerState.open()
                     }
+
                 }) {
                     Icon(imageVector = Icons.Default.Person, contentDescription = "Menu")
                 }
             })
+    }, scaffoldState = scaffoldState, drawerContent = {
+        LazyColumn(Modifier.padding(16.dp)) {
+            items(screensInDrawer) { item ->
+                DrawerItem(selected = currentRoute == item.dRoute, item = item) {
+                    scope.launch {
+                        scaffoldState.drawerState.close()
+                    }
+                    if (currentRoute == item.dRoute) {
+                        //open dialog
+                    } else {
+                        controller.navigate(item.dRoute)
+                        title.value = item.dTitle
+                    }
+                }
+            }
+        }
     }) { Text("Text", modifier = Modifier.padding(it)) }
 }
 
