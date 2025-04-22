@@ -64,7 +64,7 @@ fun MainView(
 
 
     Scaffold(topBar = {
-        TopAppBar(title = { Text("Home") },
+        TopAppBar(title = { Text(title.value) },
             navigationIcon = {
                 IconButton(onClick = {
                     //Open the Drawer
