@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -12,6 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.example.musicappui.ui.theme.MusicAppUiTheme
 
 class MainActivity : ComponentActivity() {
@@ -41,5 +46,19 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 fun GreetingPreview() {
     MusicAppUiTheme {
         Greeting("Android")
+    }
+}
+
+
+@Composable
+fun Navigation(navController: NavController, viewModel: MainViewModel, pd: PaddingValues) {
+    NavHost(
+        navController = navController as NavHostController,
+        startDestination = Screen.DrawerScreen.Account.route,
+        modifier = Modifier.padding(pd)
+    ) {
+        composable(Screen.DrawerScreen.Account.route) {}
+        composable(Screen.DrawerScreen.Subscription.route) {}
+        composable(Screen.DrawerScreen.AddAccount.route) {}
     }
 }

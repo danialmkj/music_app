@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -49,11 +50,16 @@ fun MainView(
     val navBackStackEntry by controller.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-
+    //define viewModel
+    val viewModel: MainViewModel = viewModel()
+    //save the state of currentScreen
+    val currentScreen = remember {
+        viewModel.currentScreen.value
+    }
 
     val title = remember {
         //change that to currentScreen.title
-        mutableStateOf("")
+        mutableStateOf(currentScreen.title)
     }
 
 
@@ -86,7 +92,7 @@ fun MainView(
                 }
             }
         }
-    }) { Text("Text", modifier = Modifier.padding(it)) }
+    }) { Navigation(navController = controller, viewModel = viewModel, pd = it) }
 }
 
 @Composable
