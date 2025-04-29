@@ -57,6 +57,11 @@ fun MainView(
         viewModel.currentScreen.value
     }
 
+    //variable for dialog
+    val displayDialog = remember {
+        mutableStateOf(false)
+    }
+
     val title = remember {
         //change that to currentScreen.title
         mutableStateOf(currentScreen.title)
@@ -85,6 +90,7 @@ fun MainView(
                     }
                     if (currentRoute == item.dRoute) {
                         //open dialog
+                        displayDialog.value = true
                     } else {
                         controller.navigate(item.dRoute)
                         title.value = item.dTitle
@@ -92,7 +98,12 @@ fun MainView(
                 }
             }
         }
-    }) { Navigation(navController = controller, viewModel = viewModel, pd = it) }
+    }) {
+        Navigation(navController = controller, viewModel = viewModel, pd = it)
+
+        AccountDialog(displayDialog = displayDialog)
+
+    }
 }
 
 @Composable
