@@ -60,7 +60,9 @@ fun Navigation(navController: NavController, viewModel: MainViewModel, pd: Paddi
         composable(Screen.DrawerScreen.Account.route) {
             AccountView()
         }
-        composable(Screen.DrawerScreen.Subscription.route) {}
+        composable(Screen.DrawerScreen.Subscription.route) {
+            SubscriptionPage()
+        }
         composable(Screen.DrawerScreen.AddAccount.route) {}
     }
 }
