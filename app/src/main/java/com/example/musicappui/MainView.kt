@@ -77,7 +77,7 @@ fun MainView(
                     BottomNavigationItem(
                         selected = currentRoute == item.bRoute,
                         onClick = {
-                            controller.navigate(item.route)
+                            controller.navigate(item.bRoute)
                         },
                         icon = {
                             Icon(
