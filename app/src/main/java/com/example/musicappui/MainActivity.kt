@@ -57,6 +57,16 @@ fun Navigation(navController: NavController, viewModel: MainViewModel, pd: Paddi
         startDestination = Screen.DrawerScreen.Account.route,
         modifier = Modifier.padding(pd)
     ) {
+        composable(Screen.BottomScreen.Home.bRoute) {
+            //TODO : ADD HOME SCREEN
+        }
+        composable(Screen.BottomScreen.Brows.bRoute) {
+            //TODO : ADD BROWS SCREEN
+        }
+        composable(Screen.BottomScreen.Library.bRoute) {
+            //TODO : ADD LIBRARY SCREEN
+        }
+
         composable(Screen.DrawerScreen.Account.route) {
             AccountView()
         }
