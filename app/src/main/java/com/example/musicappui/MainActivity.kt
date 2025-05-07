@@ -59,6 +59,7 @@ fun Navigation(navController: NavController, viewModel: MainViewModel, pd: Paddi
     ) {
         composable(Screen.BottomScreen.Home.bRoute) {
             //TODO : ADD HOME SCREEN
+            HomeView()
         }
         composable(Screen.BottomScreen.Brows.bRoute) {
             //TODO : ADD BROWS SCREEN
