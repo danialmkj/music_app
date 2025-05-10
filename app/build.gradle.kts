@@ -41,6 +41,7 @@ android {
 
 dependencies {
 
+    implementation(libs.androidx.ui.test.android)
     val nav_version = "2.7.7"
     val compose_version = "1.7.0"
 

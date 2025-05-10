@@ -1,5 +1,6 @@
 package com.example.musicappui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.test.isSelected
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -74,6 +76,13 @@ fun MainView(
         if (currentScreen is Screen.DrawerScreen || currentScreen == Screen.BottomScreen.Home) {
             BottomNavigation(modifier = Modifier.wrapContentSize()) {
                 screensInBottomNavigation.forEach { item ->
+                    val isSelected = currentRoute == item.bRoute
+                    Log.d(
+                        "Navigation",
+                        "Item ${item.bTitle} , currentRoute $currentRoute , isSelected $isSelected"
+                    )
+                    val tint = if (isSelected) Color.White else Color.Black
+
                     BottomNavigationItem(
                         selected = currentRoute == item.bRoute,
                         onClick = {
@@ -81,11 +90,12 @@ fun MainView(
                         },
                         icon = {
                             Icon(
+                                tint = tint,
                                 contentDescription = item.bTitle,
                                 painter = painterResource(id = item.icon)
                             )
                         },
-                        label = { Text(item.bTitle) },
+                        label = { Text(item.bTitle, color = tint) },
                         selectedContentColor = Color.White,
                         unselectedContentColor = Color.Black
 
