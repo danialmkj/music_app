@@ -1,18 +1,27 @@
 package com.example.musicappui
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -21,6 +30,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.primarySurface
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -33,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.test.isSelected
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -55,6 +68,9 @@ fun MainView(
     val navBackStackEntry by controller.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    val isSheetFullScreen by remember { mutableStateOf(false) }
+    val modifier = if (isSheetFullScreen) Modifier.fillMaxSize() else Modifier.fillMaxWidth()
+
     //define viewModel
     val viewModel: MainViewModel = viewModel()
     //save the state of currentScreen
@@ -71,6 +87,13 @@ fun MainView(
         //change that to currentScreen.title
         mutableStateOf(currentScreen.title)
     }
+
+    val modalBottomSheetState =
+        rememberModalBottomSheetState(
+            initialValue = ModalBottomSheetValue.Hidden,
+            confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded })
+
+    val roundedCornerRadius = if (isSheetFullScreen) 0.dp else 12.dp
 
     val bottomBar: @Composable () -> Unit = {
         if (currentScreen is Screen.DrawerScreen || currentScreen == Screen.BottomScreen.Home) {
@@ -105,11 +128,34 @@ fun MainView(
         }
     }
 
+    ModalBottomSheetLayout(
+        sheetContent = {
+            MoreBottomSheet(modifier = modifier)
+        },
+        sheetState = modalBottomSheetState,
+        sheetShape = RoundedCornerShape(
+            topStart = roundedCornerRadius,
+            topEnd = roundedCornerRadius
+        )
+    ) {}
 
     Scaffold(
         bottomBar = bottomBar,
         topBar = {
-            TopAppBar(title = { Text(title.value) },
+            TopAppBar(
+                actions = {
+                    IconButton(onClick = {
+                        scope.launch {
+                            if (modalBottomSheetState.isVisible)
+                                modalBottomSheetState.hide()
+                            else
+                                modalBottomSheetState.show()
+                        }
+                    }) {
+                        Icon(imageVector = Icons.Default.MoreVert, contentDescription = "More")
+                    }
+                },
+                title = { Text(title.value) },
                 navigationIcon = {
                     IconButton(onClick = {
                         //Open the Drawer
@@ -173,5 +219,27 @@ fun DrawerItem(
             text = item.dTitle,
             style = MaterialTheme.typography.h5,
         )
+    }
+}
+
+
+@Composable
+fun MoreBottomSheet(modifier: Modifier) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .background(color = MaterialTheme.colors.primarySurface)
+    ) {
+        Column(modifier = modifier.padding(16.dp), verticalArrangement = Arrangement.Center) {
+            Row(modifier = Modifier.padding(16.dp)) {
+                Icon(
+                    modifier = Modifier.padding(end = 8.dp),
+                    painter = painterResource(id = R.drawable.music_player),
+                    contentDescription = "Setting"
+                )
+                Text(text = "Settings", fontSize = 20.sp, color = Color.White)
+            }
+        }
     }
 }
